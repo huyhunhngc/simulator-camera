@@ -14,7 +14,7 @@ const normalized = normalizePath(currentPath);
   <nav class="sidebar-nav" aria-label="Documentation sections">
     {DOCS_SIDEBAR.map((group) => (
       <section class="sidebar-group">
-        <h2 class="sidebar-group-title">{group.title}</h2>
+        <p class="sidebar-group-title">{group.title}</p>
         <ul class="sidebar-list">
           {group.items.map((item) => {
             const active = item.href === normalized;
@@ -60,7 +60,7 @@ const normalized = normalizePath(currentPath);
 
           {DOCS_SIDEBAR.map((group) => (
             <section class="sidebar-group">
-              <h2 class="sidebar-group-title">{group.title}</h2>
+              <p class="sidebar-group-title">{group.title}</p>
               <ul class="sidebar-list">
                 {group.items.map((item) => {
                   const active = item.href === normalized;

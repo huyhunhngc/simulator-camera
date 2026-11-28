@@ -12,6 +12,16 @@ import { FAQS } from '@data/faq';
 const site = Astro.site ?? new URL('https://simcam.ifateam.dev');
 const abs = (path: string) => new URL(path, site).toString();
 
+const orgSchema = {
+  '@type': 'Organization',
+  name: 'IFA Team',
+  url: 'https://www.ifateam.dev/',
+  logo: {
+    '@type': 'ImageObject',
+    url: 'https://www.ifateam.dev/ifaLogo.webp',
+  },
+};
+
 const jsonLd = [
   {
     '@context': 'https://schema.org',
@@ -31,6 +41,16 @@ const jsonLd = [
     license: 'https://opensource.org/licenses/MIT',
     isAccessibleForFree: true,
     sameAs: [GITHUB_REPO],
+    author: orgSchema,
+    publisher: orgSchema,
+    featureList: [
+      'Stream photos, 720p/1080p/4K video, QR codes, or live Mac webcam to the iOS Simulator',
+      'Independent back and front virtual cameras with Triple, Dual Wide, and Single profiles',
+      'Works with Xcode Run and LLDB debugger attached via simcam xcode setup',
+      'Deterministic camera and microphone TCC permission presets for testing',
+      'Scriptable simcam CLI for XCUITest, Maestro, CI pipelines, and AI agents',
+      'Live interactive simulator screen without screen recording permission',
+    ],
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   },
   {
@@ -38,6 +58,7 @@ const jsonLd = [
     '@type': 'WebSite',
     name: 'SimCam Lite',
     url: abs('/'),
+    publisher: orgSchema,
   },
   {
     '@context': 'https://schema.org',

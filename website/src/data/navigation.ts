@@ -1,4 +1,4 @@
-export const APP_VERSION = '0.2.7';
+export const APP_VERSION = '0.2.8';
 export const GITHUB_REPO = 'https://github.com/huyhunhngc/simulator-camera';
 export const LATEST_RELEASE_URL = `${GITHUB_REPO}/releases/latest`;
 export const DMG_DOWNLOAD_URL = `https://simcamupdates.ifateam.dev/releases/SimCamLite-${APP_VERSION}.dmg`;
@@ -45,6 +45,9 @@ export const DOCS_SIDEBAR: DocNavGroup[] = [
       { title: 'Sources & Camera Profiles', href: '/docs/guides/sources-and-profiles/' },
       { title: 'Simulator & Xcode Setup', href: '/docs/guides/simulator-and-xcode/' },
       { title: 'Testing Permissions & CI', href: '/docs/guides/permissions-and-ci/' },
+      { title: 'Test QR Code Scanning', href: '/docs/guides/test-qr-code-ios-simulator/' },
+      { title: 'React Native & Flutter', href: '/docs/guides/react-native-and-flutter/' },
+      { title: 'Compare Simulator Cameras', href: '/docs/guides/compare-ios-simulator-cameras/' },
     ],
   },
   {

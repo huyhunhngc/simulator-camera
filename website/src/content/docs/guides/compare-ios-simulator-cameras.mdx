@@ -1,0 +1,42 @@
+---
+title: Compare Simulator Cameras
+seoTitle: SimCam Lite vs RocketSim & Other iOS Simulator Camera Tools
+description: Compare SimCam Lite with RocketSim, SimCam by Software Mansion, FauxCam, and code mocks for testing camera, QR codes, and permissions in Xcode's iOS Simulator.
+section: Guides
+order: 9
+updatedAt: "2026-11-28"
+---
+
+Because Xcode’s iOS Simulator has no native camera, iOS teams usually choose between physical devices, `#if targetEnvironment(simulator)` code mocks, commercial developer utilities, or runtime `AVFoundation` injectors. Here is how **SimCam Lite** compares honestly against the alternatives.
+
+<Callout type="note" title="Name clarification">
+  <strong>SimCam Lite</strong> (developed by <a href="https://www.ifateam.dev/" target="_blank" rel="noopener">IFA Team</a>, MIT-licensed at <code>simcam.ifateam.dev</code>) is an independent open-source macOS project and is not affiliated with <strong>SimCam</strong> by Software Mansion.
+</Callout>
+
+## Comparison at a glance
+
+| Capability | SimCam Lite | Commercial utilities (e.g. RocketSim / SimCam) | `#if targetEnvironment(simulator)` mocks | Physical iPhone |
+| --- | --- | --- | --- | --- |
+| **Price & license** | **Free · MIT open source** | Paid / per-seat or team plans | Free (your own code) | Hardware cost |
+| **App code changes** | **None** | None | High (maintain mock layers) | None |
+| **Xcode Run (`⌘R`) + LLDB** | **Yes** (`simcam xcode setup`) | Varies by tool | Yes | Yes |
+| **Sources** | Photo, 4K video loop, QR generator, Mac webcam, pattern | Webcam, images/videos, QR (varies by app) | Static/custom test data | Real environment |
+| **Independent Back & Front** | **Yes** (`triple`, `dual`, `single`) | Varies | Custom | Real sensors |
+| **TCC permission presets** | **5 CLI & UI presets** (`fresh`, `camera-denied`, etc.) | Manual / `simctl` | Not tested through real path | Manual Settings |
+| **CLI & CI automation** | **18 `simcam` subcommands (`--json`)** | Paid or limited | Scripted launch args | Device farm needed |
+| **Native `AVCaptureMetadataOutput`** | Not yet (`Vision` / video frames work) | Varies | Mocked | Full hardware |
+| **Movie file recording (`AVCaptureMovieFileOutput`)** | Not yet | Varies | Mocked | Full hardware |
+
+## When SimCam Lite is the right fit
+
+- **You want zero-cost adoption across a team or CI:** Because SimCam Lite is MIT-licensed and free, every engineer, QA tester, and CI runner can install it via Homebrew (`brew install --cask huyhunhngc/tap/simcam-lite`) without license keys or watermarks.
+- **You debug directly from Xcode:** Running `simcam xcode setup` once keeps breakpoints, LLDB, and View Hierarchy debugging working while injecting virtual camera frames.
+- **You automate camera tests:** With `simcam boot --inject --wait`, `simcam source qr`, and `simcam permission <app> camera-denied`, UI tests and AI coding agents can drive deterministic camera and permission scenarios from Terminal.
+- **You want an embedded simulator view:** Since `v0.2.7`, SimCam Lite also shows an interactive live screen of the selected simulator right beside your camera cards with no screen recording permission required.
+
+## When you still need a physical iPhone (or another approach)
+
+- Your app relies exclusively on `AVCaptureMetadataOutput` for barcode detection or `AVCaptureMovieFileOutput` / `AVCaptureMultiCamSession` (see [Limitations & Compatibility](/docs/architecture/limitations/)).
+- You are validating real-world autofocus, optical zoom, low-light noise, LiDAR, or hardware video encoding performance before an App Store release.
+
+For a deeper technical look at how runtime injection works without modifying your `.app` bundle, read [How Injection Works](/docs/architecture/how-injection-works/).

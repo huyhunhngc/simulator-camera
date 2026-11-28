@@ -1,0 +1,53 @@
+---
+title: React Native & Flutter
+seoTitle: Use Camera in iOS Simulator for React Native & Flutter Apps
+description: Stream photos, 4K video, QR codes, or your Mac webcam into React Native VisionCamera, Expo, and Flutter camera apps on the iOS Simulator with zero code changes.
+section: Guides
+order: 8
+updatedAt: "2026-11-28"
+---
+
+Cross-platform frameworks like **React Native**, **Expo**, and **Flutter** build native iOS binaries that talk to Apple’s `AVFoundation` framework under the hood. Because SimCam Lite emulates `AVFoundation` at runtime inside the iOS Simulator, it works without installing any JavaScript, Dart, or CocoaPods SDKs.
+
+## Setup for React Native, Expo, and Flutter
+
+<Steps>
+  <ol>
+    <li>
+      <strong>Enable simulator-wide injection</strong><br />
+      Open <strong>SimCam Lite</strong>, choose a source (photo, looping 4K video, QR code, or Mac webcam), go to the <strong>Simulator</strong> tab, and turn on <strong>Use SimCamLite in every app on this simulator</strong>—or run <code>simcam inject on</code> in Terminal.
+    </li>
+    <li>
+      <strong>Run your dev build as usual</strong><br />
+      Launch your app with <code>npx react-native run-ios</code>, <code>npx expo run:ios</code>, or <code>flutter run</code>.
+    </li>
+    <li>
+      <strong>Running directly from Xcode (`⌘R`)?</strong><br />
+      If you open <code>ios/YourApp.xcworkspace</code> in Xcode and press Run, Xcode’s own diagnostics override simulator-wide <code>DYLD_INSERT_LIBRARIES</code>. Run <code>simcam xcode setup</code> inside your <code>ios/</code> folder once so Xcode keeps attaching SimCam Lite alongside the LLDB debugger.
+    </li>
+  </ol>
+</Steps>
+
+<Callout type="note" title="Expo Go vs. Expo Dev Builds">
+  Simulator-wide injection works with both <strong>Expo development builds</strong> (<code>expo run:ios</code>) and <strong>Expo Go</strong> on the iOS Simulator, because SimCam Lite injects every user app launched on that booted simulator.
+</Callout>
+
+## Library & feature compatibility
+
+- **Live camera previews & photo capture**: Plugins backed by `AVCaptureVideoPreviewLayer`, `AVCaptureVideoDataOutput`, and `AVCapturePhotoOutput`—such as `react-native-vision-camera` frame processors, Flutter `camera` live previews/stills, and WebRTC video streams—receive live frames and still captures.
+- **Format & device capability checks (`v0.2.5–v0.2.8`)**: Libraries that enumerate camera formats (`1280 × 720`, `1920 × 1080`, `1920 × 1440`, `4032 × 3024`, and `3840 × 2160` 4K on back cameras), lens topologies (`Triple`, `Dual Wide`, `Single`), or query `isCinematicVideoCaptureSupported` work cleanly without crashing.
+- **Audio streams**: `AVCaptureAudioDataOutput` streams 48 kHz mono 16-bit PCM from your Mac’s microphone.
+- **Known limits to check first**: `AVCaptureMetadataOutput` (built-in AVFoundation barcode delegate) and `AVCaptureMovieFileOutput` (video file recording output) are not implemented yet. If a barcode plugin relies solely on `AVCaptureMetadataOutput` rather than video frame processing (`AVCaptureVideoDataOutput`), it won’t fire scan callbacks yet. See [Limitations & Compatibility](/docs/architecture/limitations/).
+
+## Switching sources and testing permissions in dev
+
+While Metro or Flutter hot-reload is running, you never have to rebuild the iOS app to change camera inputs or test permission recovery screens:
+
+```bash
+# Switch to a live Mac webcam or a test QR code without rebuilding
+simcam source camera
+simcam source qr "https://simcam.ifateam.dev"
+
+# Test camera-denied onboarding & recovery UI
+simcam permission com.yourcompany.app camera-denied
+```

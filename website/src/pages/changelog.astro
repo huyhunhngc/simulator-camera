@@ -3,11 +3,43 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import { CHANGELOG_RELEASES } from '@data/changelog';
 import { GITHUB_REPO, LATEST_RELEASE_URL } from '@data/navigation';
 import { formatInlineCode } from '@data/format';
+
+const site = Astro.site ?? new URL('https://simcam.ifateam.dev');
+const changelogUrl = new URL('/changelog/', site).toString();
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'SimCam Lite', item: new URL('/', site).toString() },
+      { '@type': 'ListItem', position: 2, name: 'Changelog', item: changelogUrl },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Changelog & Release Notes — SimCam Lite for iOS Simulator',
+    description:
+      'Release notes and version history for SimCam Lite, including 720p and 4K video formats, live interactive simulator screen, simulator rotation, permission presets, and audio.',
+    url: changelogUrl,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: 'SimCam Lite',
+      url: new URL('/', site).toString(),
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'IFA Team',
+      url: 'https://www.ifateam.dev/',
+    },
+  },
+];
 ---
 
 <BaseLayout
-  title="Changelog — SimCam Lite"
-  description="Release notes and version history for SimCam Lite, from 4K back-camera support and simulator rotation to permission presets and audio."
+  title="Changelog & Release Notes — SimCam Lite for iOS Simulator"
+  description="Release notes and version history for SimCam Lite, including 720p and 4K video formats, live interactive simulator screen, simulator rotation, permission presets, and audio."
+  jsonLd={jsonLd}
 >
   <section class="changelog-page">
     <div class="container changelog-container">

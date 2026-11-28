@@ -25,9 +25,11 @@ const { Content, headings } = await render(entry);
 
 <DocsLayout
   title={entry.data.title}
+  seoTitle={entry.data.seoTitle}
   description={entry.data.description}
   section={entry.data.section}
   entryId={entry.id}
+  updatedAt={entry.data.updatedAt}
   headings={headings}
 >
   <Content components={{ Callout, Steps, Tabs, TabItem, CardGrid, LinkCard }} />

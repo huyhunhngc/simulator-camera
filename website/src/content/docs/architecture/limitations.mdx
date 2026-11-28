@@ -1,8 +1,10 @@
 ---
 title: Limitations & Compatibility
-description: Exact AVFoundation capabilities supported today and known limitations in the current release.
+seoTitle: AVFoundation Compatibility & QR Scanning Support | SimCam Lite
+description: Exact AVFoundation capabilities supported today (720p/1080p/4K formats, Cinematic flag checks, Vision QR scanning) and known limitations in the current release.
 section: Architecture
-order: 8
+order: 11
+updatedAt: "2026-11-28"
 ---
 
 SimCam Lite focuses on the most common iOS camera workflows—live previews, frame processing, QR/barcode scanning via video frames, photo capture, and audio data streams—while remaining honest about what isn’t implemented yet.
@@ -12,9 +14,9 @@ SimCam Lite focuses on the most common iOS camera workflows—live previews, fra
 - **Live preview (`AVCaptureVideoPreviewLayer`)**: SwiftUI and UIKit camera screens render live frames at 30 or 60 fps with proper aspect fill/fit and rotation.
 - **Video frame processing (`AVCaptureVideoDataOutput`)**: Vision (`VNDetectBarcodesRequest`, `VNRecognizeTextRequest`), CoreML, WebRTC/video call SDKs, and custom Metal/CoreImage pipelines receive real `CMSampleBuffer` frames.
 - **Photo capture (`AVCapturePhotoOutput`)**: Capturing stills returns full-resolution photos from the active back or front stream.
-- **4K back camera format (`v0.2.5+`)**: Back cameras advertise a `3840 × 2160` format and respond to `.hd4K3840x2160` session presets.
+- **4K and 720p camera formats (`v0.2.5+` / `v0.2.8+`)**: Simulated cameras expose `1280 × 720` (720p), `1920 × 1080`, `1920 × 1440`, and `4032 × 3024` formats; back cameras also advertise a `3840 × 2160` format and respond to `.hd4K3840x2160` session presets.
 - **Audio data output (`AVCaptureAudioDataOutput`)**: Supplies 48 kHz mono 16-bit PCM samples from the Mac’s microphone (or silence if mic permission is not granted).
-- **Device discovery & rotation**: Emulates Triple (`0.5× · 1× · 3×`), Dual Wide, and Single camera topologies plus `AVCaptureDeviceRotationCoordinator`.
+- **Device discovery, feature flags & rotation**: Emulates Triple (`0.5× · 1× · 3×`), Dual Wide, and Single camera topologies, answers `isCinematicVideoCaptureSupported` safely (`false` in `v0.2.8+` without crashing), and supports `AVCaptureDeviceRotationCoordinator`.
 
 ## Known limitations
 

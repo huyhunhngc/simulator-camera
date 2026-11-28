@@ -5,10 +5,12 @@ const docs = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/docs' }),
   schema: z.object({
     title: z.string(),
+    seoTitle: z.string().optional(),
     description: z.string(),
     section: z.string(),
     order: z.number().optional(),
     badge: z.string().optional(),
+    updatedAt: z.string().optional(),
   }),
 });
 

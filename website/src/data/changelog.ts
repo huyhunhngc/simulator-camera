@@ -14,10 +14,27 @@ export interface ChangelogRelease {
 
 export const CHANGELOG_RELEASES: ChangelogRelease[] = [
   {
+    version: '0.2.8',
+    date: 'Nov 28, 2026',
+    summary: 'Better support for camera apps that check device features.',
+    latest: true,
+    highlights: [
+      {
+        title: 'No more crash on Cinematic checks',
+        description:
+          'Apps that ask whether the camera supports Cinematic video (`isCinematicVideoCaptureSupported`) now get a clear "no" instead of crashing.',
+      },
+      {
+        title: '720p format',
+        description:
+          'The simulated cameras now offer `1280 × 720` next to `1080p` and `4K`, so apps with 720p modes can pick it.',
+      },
+    ],
+  },
+  {
     version: '0.2.7',
     date: 'Nov 25, 2026',
     summary: 'See and use the simulator right next to your cameras.',
-    latest: true,
     highlights: [
       {
         title: 'Simulator screen',

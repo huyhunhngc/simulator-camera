@@ -1,8 +1,10 @@
 ---
 title: Sources & Camera Profiles
-description: Configure media sources, QR codes, independent back/front streams, 4K video, frame adjustments, hardware profiles, and audio.
+seoTitle: Stream Webcam, 4K Video & QR Codes to iOS Simulator | SimCam Lite
+description: Configure media sources, QR codes, independent back/front streams, 720p to 4K video formats, frame adjustments, hardware profiles, and audio.
 section: Guides
 order: 4
+updatedAt: "2026-11-28"
 ---
 
 SimCam Lite exposes two independent virtual camera feeds (**Back camera** and **Front camera**) along with realistic `AVFoundation` hardware profiles.
@@ -51,8 +53,8 @@ SimCam Lite emulates real iPhone camera topologies so `AVCaptureDevice.Discovery
 - **Dual Wide** (`dual`): `0.5×` ultra-wide · `1×` wide
 - **Single** (`single`): standard single wide lens
 
-<Callout type="tip" title="4K video format (v0.2.5+)">
-  Back cameras advertise a `3840 × 2160` 4K video format, and `AVCaptureSession.Preset.hd4K3840x2160` delivers real 4K frames. Because the iOS Simulator has no hardware video encoder, software encoding during 4K recording saves fewer frames per second than a physical iPhone while preserving full resolution.
+<Callout type="tip" title="720p, 1080p, and 4K video formats (v0.2.5–v0.2.8)">
+  Simulated cameras expose `1280 × 720` (720p, added in v0.2.8), `1920 × 1080` (1080p), `1920 × 1440`, and `4032 × 3024` formats, and back cameras also advertise `3840 × 2160` (4K) so `AVCaptureSession.Preset.hd4K3840x2160` delivers real 4K frames. Because the iOS Simulator has no hardware video encoder, software encoding during 4K recording saves fewer frames per second than a physical iPhone while preserving full resolution.
 </Callout>
 
 - **Frame rate**: switch between `30 fps` (default) and `60 fps` from the toolbar, menu bar, or `simcam fps 60`.
@@ -68,5 +70,5 @@ Apps that request microphone input alongside video via `AVCaptureAudioDataOutput
 The **Connected apps** card in the main window (and `simcam status`) displays every injected app currently reading frames:
 
 - App name, bundle ID, and **PID**
-- Active camera (`Back camera` / `Front camera`) and stream dimensions (`1920×1440` or `3840×2160`)
+- Active camera (`Back camera` / `Front camera`) and stream dimensions (`1280×720`, `1920×1080`, `1920×1440`, or `3840×2160`)
 - Live **frame count** and **photos taken** counter

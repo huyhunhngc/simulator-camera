@@ -1,0 +1,86 @@
+---
+title: Test QR Code Scanning
+seoTitle: How to Test QR Code & Barcode Scanning in the iOS Simulator
+description: Test QR code and barcode scanners in Xcode's iOS Simulator without a physical iPhone using SimCam Lite, Apple Vision, clipboard presets, and CLI automation.
+section: Guides
+order: 7
+updatedAt: "2026-11-28"
+---
+
+Xcode’s iOS Simulator has no camera hardware, so testing QR code onboarding, payment links, or barcode scanners usually forces you to keep a physical iPhone plugged in and point it at your monitor.
+
+With **SimCam Lite**, you can feed generated QR codes, barcode photos, or your Mac’s webcam directly into the iOS Simulator—including when running from Xcode with the debugger attached—without adding test-only camera mocks to your app.
+
+## 1. Stream a QR code in three steps
+
+<Steps>
+  <ol>
+    <li>
+      <strong>Pick QR as the Back camera source</strong><br />
+      Open <strong>SimCam Lite</strong>, choose <strong>QR…</strong> on the Back camera card, and type or paste any URL, deep link, or payload string. SimCam Lite remembers your <strong>8 most recent codes</strong> and offers one-click <strong>QR Code from Clipboard</strong> in the menu bar.
+    </li>
+    <li>
+      <strong>Attach to your simulator or Xcode scheme</strong><br />
+      Toggle <strong>Use SimCamLite in every app on this simulator</strong>, or run <code>simcam xcode setup</code> once in your project directory if you launch with Xcode’s Run button (<code>⌘R</code>).
+    </li>
+    <li>
+      <strong>Open your scanner screen</strong><br />
+      Launch your app. Your live viewfinder renders the crisp generated QR code immediately—and switching QR payloads updates the camera feed in real time without restarting the app.
+    </li>
+  </ol>
+</Steps>
+
+## 2. Script QR payloads from Terminal, UI tests, or CI
+
+You can swap QR payloads, rotate/mirror frames, and test invalid or edge-case payloads from `simcam` inside shell scripts, XCUITest helpers, Maestro flows, or AI coding agents:
+
+```bash
+# Boot a simulator with camera injection enabled
+simcam boot "iPhone 17 Pro" --inject --wait
+
+# Stream a deep link QR code into the back camera
+simcam source qr "myapp://auth/callback?token=dev-123"
+
+# Switch to an image file of a Code 128 or EAN-13 barcode
+simcam source ./fixtures/ean13-sample.png
+simcam adjust --fit
+```
+
+If a barcode sits close to the edge of the sensor frame, switch from `--fill` to `--fit` (`simcam adjust --fit`) so the full quiet zone around the code stays visible.
+
+## 3. Compatibility: Vision vs. `AVCaptureMetadataOutput`
+
+<Callout type="warning" title="Important AVFoundation distinction">
+  SimCam Lite delivers live frames through <code>AVCaptureVideoDataOutput</code> and <code>AVCaptureVideoPreviewLayer</code>, so scanners built on <strong>Apple Vision</strong> (<code>VNDetectBarcodesRequest</code>), <code>VisionKit</code> frame processing, CoreImage, or cross-platform libraries reading video buffers work out of the box. Native <code>AVCaptureMetadataOutput</code> object delegate callbacks are <strong>not emulated yet</strong>.
+</Callout>
+
+If your Swift scanner processes video sample buffers with Apple Vision, no code changes are required:
+
+```swift
+func captureOutput(
+  _ output: AVCaptureOutput,
+  didOutput sampleBuffer: CMSampleBuffer,
+  from connection: AVCaptureConnection
+) {
+  guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+  let request = VNDetectBarcodesRequest { request, _ in
+    let codes = (request.results as? [VNBarcodeObservation])?.compactMap(\.payloadStringValue)
+    // Handle decoded QR / barcode strings
+  }
+  try? VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .right).perform([request])
+}
+```
+
+## 4. Test camera permission edge cases around scanning
+
+QR scanner screens often break when a user taps **Don’t Allow** on first launch. Jump straight to any TCC permission state and relaunch your app in one command:
+
+```bash
+# Verify your "Camera access required" recovery UI
+simcam permission com.example.scanner camera-denied
+
+# Reset back to a clean install to test the system prompt
+simcam permission com.example.scanner fresh
+```
+
+See [Testing Permissions & CI](/docs/guides/permissions-and-ci/) and [Limitations & Compatibility](/docs/architecture/limitations/) for full details.
